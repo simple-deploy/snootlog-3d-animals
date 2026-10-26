@@ -1,585 +1,1944 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snootlog — Every dose, on time, every time.</title>
-<meta name="description" content="Snootlog is the medication, vaccination, and vet-finding app built for pet parents. Launching August 2026.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=DM+Sans:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<style>
-  :root {
-    --ink: #1B211A; --ink-soft: #565F52; --muted: #8A9082;
-    --canvas: #F7F4ED; --surface: #FFFFFF; --line: #E7E2D2;
-    --pine: #2F5D52; --pine-dark: #1E4038; --pine-soft: #E3ECE6;
-    --honey: #D9A441; --honey-hi: #F2C265; --honey-soft: #F7ECD3;
-    --coral: #F2705A; --midnight: #12211B;
-    --radius-md: 20px; --radius-lg: 30px; --radius-pill: 999px;
-    --shadow: rgba(18,33,27,0.28); --ease: cubic-bezier(.22,1,.36,1);
-    --bounce: cubic-bezier(.34,1.7,.64,1);
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  }
-  body {
-    margin: 0; color: var(--ink); font-family: 'DM Sans', sans-serif; line-height: 1.55;
-    background: var(--canvas); -webkit-font-smoothing: antialiased; overflow-x: hidden;
-  }
-  h1, h2, h3 { font-family: 'Fraunces', serif; color: var(--ink); margin: 0; letter-spacing: -0.01em; }
-  a { color: inherit; text-decoration: none; }
-  ul { margin: 0; padding: 0; list-style: none; }
-  button { font-family: inherit; }
-  :focus-visible { outline: 2.5px solid var(--coral); outline-offset: 3px; border-radius: 6px; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snootlog — Every dose, on time, every time.</title>
+  <meta name="description"
+    content="Snootlog is the medication, vaccination, and vet-finding app built for pet parents. Launching August 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=DM+Sans:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {
+      --ink: #1B211A;
+      --ink-soft: #565F52;
+      --muted: #8A9082;
+      --canvas: #F7F4ED;
+      --surface: #FFFFFF;
+      --line: #E7E2D2;
+      --pine: #2F5D52;
+      --pine-dark: #1E4038;
+      --pine-soft: #E3ECE6;
+      --honey: #D9A441;
+      --honey-hi: #F2C265;
+      --honey-soft: #F7ECD3;
+      --coral: #F2705A;
+      --midnight: #12211B;
+      --radius-md: 20px;
+      --radius-lg: 30px;
+      --radius-pill: 999px;
+      --shadow: rgba(18, 33, 27, 0.28);
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      --bounce: cubic-bezier(.34, 1.7, .64, 1);
+    }
 
-  /* ---------- Nav ---------- */
-  header.site { position: sticky; top: 14px; z-index: 100; }
-  .nav {
-    display: flex; align-items: center; justify-content: space-between;
-    max-width: 1120px; margin: 0 auto; padding: 10px 14px 10px 20px;
-    background: rgba(255,255,255,0.75); backdrop-filter: saturate(180%) blur(18px);
-    border: 1px solid rgba(255,255,255,0.7); border-radius: var(--radius-pill);
-    box-shadow: 0 14px 34px -18px var(--shadow);
-  }
-  .brand { display: flex; align-items: center; gap: 9px; }
-  .brand-mark { width: 34px; height: 34px; border-radius: 11px; background: linear-gradient(150deg, var(--pine), var(--pine-dark)); display: flex; align-items: center; justify-content: center; }
-  .brand-mark svg { width: 20px; height: 20px; }
-  .brand-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 16.5px; }
-  .nav-links { display: flex; gap: 26px; align-items: center; }
-  .nav-links a.link { font-size: 13.5px; font-weight: 500; color: var(--ink-soft); }
-  .nav-links a.link:hover { color: var(--pine); }
-  .nav-toggle { display: none; background: none; border: none; font-size: 22px; color: var(--ink); cursor: pointer; }
+    * {
+      box-sizing: border-box;
+    }
 
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 14px; padding: 12px 22px; border: none; cursor: pointer; border-radius: var(--radius-pill); }
-  .btn-sm { padding: 9px 18px; font-size: 12.5px; }
-  .btn-ghost { background: transparent; border: 1.5px solid var(--line); color: var(--ink); }
-  .btn-ghost:hover { border-color: var(--pine); color: var(--pine); }
-  .btn-3d { position: relative; background: var(--coral); color: #fff; transform: translateY(0); transition: transform 0.12s var(--bounce); }
-  .btn-3d::after { content: ""; position: absolute; inset: 0; border-radius: inherit; z-index: -1; background: #C6503B; transform: translateY(7px); }
-  .btn-3d:hover { transform: translateY(-3px) scale(1.03); }
-  .btn-3d:active { transform: translateY(5px); }
-  .btn-3d:active::after { transform: translateY(2px); }
-  .btn-3d.honey { background: var(--honey); color: #1C1440; }
-  .btn-3d.honey::after { background: #B8892B; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* ---------- Hero ---------- */
-  .hero { padding: 64px 0 20px; position: relative; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: 30px; align-items: center; }
-  .eyebrow-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--canvas); font-family: 'Space Mono', monospace; font-weight: 700; font-size: 11.5px; letter-spacing: 0.06em; padding: 8px 14px 8px 10px; border-radius: var(--radius-pill); margin-bottom: 24px; }
-  .eyebrow-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); animation: pulseDot 1.3s ease-in-out infinite; }
-  @keyframes pulseDot { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.5; } }
-  .hero h1 { font-size: clamp(36px, 4.6vw, 58px); font-weight: 600; line-height: 1.04; }
-  .hero h1 em { font-style: italic; font-weight: 500; color: var(--coral); }
-  .hero p.lede { margin-top: 20px; font-size: 17.5px; color: var(--ink-soft); max-width: 460px; }
-  .hero-cta { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; }
-  .hero-note { margin-top: 20px; font-size: 12.5px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
 
-  /* ---------- 3D dog stage ---------- */
-  .dog-stage { position: relative; height: 460px; }
-  .dog-canvas { width: 100%; height: 100%; cursor: grab; touch-action: none; }
-  .dog-canvas:active { cursor: grabbing; }
-  .dog-hint {
-    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ink-soft);
-    background: rgba(255,255,255,0.8); padding: 6px 14px; border-radius: var(--radius-pill);
-    display: flex; align-items: center; gap: 6px; pointer-events: none;
-  }
-  .float-chip {
-    position: absolute; background: #fff; border-radius: 16px; padding: 10px 14px;
-    box-shadow: 0 20px 34px -18px var(--shadow); font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; gap: 8px; animation: chipBob 3.4s ease-in-out infinite;
-  }
-  @keyframes chipBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  .float-chip .ic { width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
-  .chip-1 { top: 4%; left: 0%; color: var(--pine); }
-  .chip-1 .ic { background: var(--pine-soft); }
-  .chip-2 { bottom: 14%; right: 0%; color: var(--coral); animation-delay: 1.2s; }
-  .chip-2 .ic { background: #FCE4DE; }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
 
-  /* ---------- Marquee ---------- */
-  .marquee-wrap { background: var(--ink); overflow: hidden; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); margin: 30px 0; }
-  .marquee-track { display: flex; width: max-content; animation: marquee 22s linear infinite; }
-  .marquee-track:hover { animation-play-state: paused; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .marquee-item { display: flex; align-items: center; gap: 14px; padding: 0 28px; font-family: 'Space Mono', monospace; font-size: 14px; color: var(--canvas); white-space: nowrap; }
-  .marquee-item .sep { color: var(--honey); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.55;
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-  section { padding: 96px 0; }
-  .section-head { max-width: 620px; margin: 0 auto 48px; text-align: center; }
-  .section-head h2 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; }
-  .section-head p { margin-top: 14px; color: var(--ink-soft); font-size: 16px; }
-  .tag-chip { display: inline-flex; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; background: var(--pine-soft); color: var(--pine); padding: 6px 12px; border-radius: var(--radius-pill); margin-bottom: 18px; }
+    h1,
+    h2,
+    h3 {
+      font-family: 'Fraunces', serif;
+      color: var(--ink);
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
 
-  /* ---------- Draggable 3D pet carousel ---------- */
-  .carousel-section { background: var(--midnight); border-radius: 44px; margin: 0 32px; padding: 84px 40px; position: relative; overflow: hidden; }
-  .carousel-section .section-head h2, .carousel-section .section-head p { color: #fff; }
-  .carousel-section .section-head p { color: rgba(255,255,255,0.6); }
-  .carousel-stage { position: relative; width: 100%; height: 380px; perspective: 1300px; touch-action: pan-y; cursor: grab; }
-  .carousel-stage:active { cursor: grabbing; }
-  .carousel-ring { position: absolute; inset: 0; transform-style: preserve-3d; }
-  .carousel-node {
-    position: absolute; top: 50%; left: 50%; width: 130px; height: 160px; margin: -80px 0 0 -65px;
-    border-radius: 24px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.35); backface-visibility: visible;
-  }
-  .carousel-node .em { font-size: 46px; }
-  .carousel-node .lb { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
-  .carousel-hint { text-align: center; margin-top: 18px; font-family: 'Space Mono', monospace; font-size: 11.5px; color: rgba(255,255,255,0.5); }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-  /* ---------- 3D flip cards ---------- */
-  .flip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .flip-card { perspective: 1200px; height: 200px; opacity: 0; transform: translateY(20px) scale(0.96); transition: opacity 0.5s var(--bounce), transform 0.5s var(--bounce); }
-  .flip-card.in-view { opacity: 1; transform: translateY(0) scale(1); }
-  .flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s var(--ease); }
-  .flip-card:hover .flip-inner { transform: rotateY(180deg); }
-  .flip-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; justify-content: center; border: 1px solid var(--line); }
-  .flip-front { background: var(--surface); }
-  .flip-back { background: var(--coral); color: #fff; transform: rotateY(180deg); }
-  .flip-icon { width: 44px; height: 44px; border-radius: 14px; background: var(--pine-soft); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
-  .flip-front h3 { font-size: 16.5px; font-weight: 600; }
-  .flip-front p { color: var(--muted); font-size: 12.5px; margin-top: 6px; }
-  .flip-back p { font-size: 13.5px; line-height: 1.6; }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
 
-  /* ---------- Spotlight ---------- */
-  .spotlight-row { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding: 50px 0; }
-  .spotlight-eyebrow { color: var(--coral); font-weight: 700; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 14px; font-family: 'Space Mono', monospace; }
-  .spotlight-text h3 { font-size: clamp(24px, 2.6vw, 30px); font-weight: 600; margin-bottom: 16px; }
-  .spotlight-text p { color: var(--ink-soft); font-size: 16px; margin-bottom: 18px; }
-  .spotlight-list li { display: flex; gap: 10px; margin-bottom: 12px; font-size: 14.5px; color: var(--ink-soft); }
-  .spotlight-list .check { color: var(--pine); font-weight: 700; }
-  .mock-card { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--line); box-shadow: 0 30px 60px -30px var(--shadow); transform: rotate(-2deg); transition: transform 0.35s var(--bounce); }
-  .mock-card:hover { transform: rotate(0deg) scale(1.02); }
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 14px; }
-  .cal-head { text-align: center; font-size: 10px; color: var(--muted); font-weight: 700; }
-  .cal-cell { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11.5px; background: var(--canvas); color: var(--ink-soft); }
-  .cal-cell.today { background: var(--pine); color: #fff; font-weight: 700; }
+    button {
+      font-family: inherit;
+    }
 
-  /* ---------- Finale ---------- */
-  .finale { background: linear-gradient(135deg, var(--coral), #C6503B); border-radius: 44px; margin: 0 32px; padding: 90px 56px; text-align: center; position: relative; overflow: hidden; }
-  .finale h2 { color: #fff; font-size: clamp(28px, 3.8vw, 42px); font-weight: 600; }
-  .finale h2 em { color: var(--honey-hi); font-style: italic; }
-  .finale p { color: rgba(255,255,255,0.85); margin: 16px auto 28px; max-width: 440px; }
-  .waitlist-form { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
-  .waitlist-form input { font-weight: 700; font-size: 14.5px; padding: 14px 20px; border-radius: var(--radius-pill); border: 1.5px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; min-width: 250px; }
-  .waitlist-form input::placeholder { color: rgba(255,255,255,0.6); }
-  .waitlist-form.submitted::after { content: "🎉 You're on the list — see you in August!"; display: block; margin-top: 14px; color: #fff; font-family: 'Space Mono', monospace; font-size: 13px; width: 100%; }
+    :focus-visible {
+      outline: 2.5px solid var(--coral);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
 
-  footer.site { padding: 50px 0 30px; text-align: center; }
-  footer .brand { justify-content: center; margin-bottom: 10px; display: flex; }
-  footer p { color: var(--ink-soft); font-size: 13px; font-family: 'Space Mono', monospace; }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
 
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.in-view { opacity: 1; transform: translateY(0); }
+    /* ---------- Nav ---------- */
+    header.site {
+      position: sticky;
+      top: 14px;
+      z-index: 100;
+    }
 
-  .confetti-piece { position: fixed; top: -20px; z-index: 999; pointer-events: none; }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 14px 10px 20px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: saturate(180%) blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 14px 34px -18px var(--shadow);
+    }
 
-  @media (max-width: 980px) {
-    .hero-grid { grid-template-columns: 1fr; }
-    .dog-stage { height: 360px; margin-top: 10px; }
-    .flip-grid { grid-template-columns: repeat(2, 1fr); }
-    .spotlight-row { grid-template-columns: 1fr; }
-    .carousel-section, .finale { margin: 0 14px; }
-  }
-  @media (max-width: 640px) {
-    .wrap { padding: 0 20px; }
-    .nav { margin: 0 10px; padding: 8px 8px 8px 18px; }
-    .nav-links { position: fixed; top: 66px; left: 12px; right: 12px; background: var(--surface); border-radius: 22px; flex-direction: column; align-items: flex-start; padding: 18px; gap: 14px; box-shadow: 0 14px 30px var(--shadow); transform: translateY(-140%); transition: transform 0.25s ease; }
-    .nav-links.open { transform: translateY(0); }
-    .nav-toggle { display: block; }
-    .flip-grid { grid-template-columns: 1fr; }
-    section { padding: 60px 0; }
-    .float-chip { display: none; }
-    .carousel-stage { height: 300px; }
-    .carousel-node { width: 100px; height: 130px; margin: -65px 0 0 -50px; }
-    .carousel-node .em { font-size: 34px; }
-  }
-</style>
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: linear-gradient(150deg, var(--pine), var(--pine-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-mark svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .brand-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 16.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .nav-links a.link {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink-soft);
+    }
+
+    .nav-links a.link:hover {
+      color: var(--pine);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 22px;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-pill);
+    }
+
+    .btn-sm {
+      padding: 9px 18px;
+      font-size: 12.5px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--line);
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--pine);
+      color: var(--pine);
+    }
+
+    .btn-3d {
+      position: relative;
+      background: var(--coral);
+      color: #fff;
+      transform: translateY(0);
+      transition: transform 0.12s var(--bounce);
+    }
+
+    .btn-3d::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      z-index: -1;
+      background: #C6503B;
+      transform: translateY(7px);
+    }
+
+    .btn-3d:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .btn-3d:active {
+      transform: translateY(5px);
+    }
+
+    .btn-3d:active::after {
+      transform: translateY(2px);
+    }
+
+    .btn-3d.honey {
+      background: var(--honey);
+      color: #1C1440;
+    }
+
+    .btn-3d.honey::after {
+      background: #B8892B;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      padding: 64px 0 20px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .eyebrow-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ink);
+      color: var(--canvas);
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      padding: 8px 14px 8px 10px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 24px;
+    }
+
+    .eyebrow-tag .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--coral);
+      animation: pulseDot 1.3s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.6);
+        opacity: 0.5;
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 4.6vw, 58px);
+      font-weight: 600;
+      line-height: 1.04;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--coral);
+    }
+
+    .hero p.lede {
+      margin-top: 20px;
+      font-size: 17.5px;
+      color: var(--ink-soft);
+      max-width: 460px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hero-note {
+      margin-top: 20px;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ---------- 3D dog stage ---------- */
+    .dog-stage {
+      position: relative;
+      height: 460px;
+    }
+
+    .dog-canvas {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .dog-canvas:active {
+      cursor: grabbing;
+    }
+
+    .dog-hint {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-soft);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .float-chip {
+      position: absolute;
+      background: #fff;
+      border-radius: 16px;
+      padding: 10px 14px;
+      box-shadow: 0 20px 34px -18px var(--shadow);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: chipBob 3.4s ease-in-out infinite;
+    }
+
+    @keyframes chipBob {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .float-chip .ic {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .chip-1 {
+      top: 4%;
+      left: 0%;
+      color: var(--pine);
+    }
+
+    .chip-1 .ic {
+      background: var(--pine-soft);
+    }
+
+    .chip-2 {
+      bottom: 14%;
+      right: 0%;
+      color: var(--coral);
+      animation-delay: 1.2s;
+    }
+
+    .chip-2 .ic {
+      background: #FCE4DE;
+    }
+
+    /* ---------- Marquee ---------- */
+    .marquee-wrap {
+      background: var(--ink);
+      overflow: hidden;
+      padding: 15px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin: 30px 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 28px;
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      color: var(--canvas);
+      white-space: nowrap;
+    }
+
+    .marquee-item .sep {
+      color: var(--honey);
+    }
+
+    section {
+      padding: 96px 0;
+    }
+
+    .section-head {
+      max-width: 620px;
+      margin: 0 auto 48px;
+      text-align: center;
+    }
+
+    .section-head h2 {
+      font-size: clamp(28px, 3.4vw, 40px);
+      font-weight: 600;
+    }
+
+    .section-head p {
+      margin-top: 14px;
+      color: var(--ink-soft);
+      font-size: 16px;
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: var(--pine-soft);
+      color: var(--pine);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 18px;
+    }
+
+    /* ---------- Draggable 3D pet carousel ---------- */
+    .carousel-section {
+      background: var(--midnight);
+      border-radius: 44px;
+      margin: 0 32px;
+      padding: 84px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-section .section-head h2,
+    .carousel-section .section-head p {
+      color: #fff;
+    }
+
+    .carousel-section .section-head p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .carousel-stage {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      perspective: 1300px;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+
+    .carousel-stage:active {
+      cursor: grabbing;
+    }
+
+    .carousel-ring {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+
+    .carousel-node {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 130px;
+      height: 160px;
+      margin: -80px 0 0 -65px;
+      border-radius: 24px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      backface-visibility: visible;
+    }
+
+    .carousel-node .em {
+      font-size: 46px;
+    }
+
+    .carousel-node .lb {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .carousel-hint {
+      text-align: center;
+      margin-top: 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ---------- 3D flip cards ---------- */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .flip-card {
+      perspective: 1200px;
+      height: 200px;
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+      transition: opacity 0.5s var(--bounce), transform 0.5s var(--bounce);
+    }
+
+    .flip-card.in-view {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s var(--ease);
+    }
+
+    .flip-card:hover .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid var(--line);
+    }
+
+    .flip-front {
+      background: var(--surface);
+    }
+
+    .flip-back {
+      background: var(--coral);
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+
+    .flip-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--pine-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .flip-front h3 {
+      font-size: 16.5px;
+      font-weight: 600;
+    }
+
+    .flip-front p {
+      color: var(--muted);
+      font-size: 12.5px;
+      margin-top: 6px;
+    }
+
+    .flip-back p {
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    /* ---------- Spotlight ---------- */
+    .spotlight-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+      padding: 50px 0;
+    }
+
+    .spotlight-eyebrow {
+      color: var(--coral);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .spotlight-text h3 {
+      font-size: clamp(24px, 2.6vw, 30px);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .spotlight-text p {
+      color: var(--ink-soft);
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+
+    .spotlight-list li {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 14.5px;
+      color: var(--ink-soft);
+    }
+
+    .spotlight-list .check {
+      color: var(--pine);
+      font-weight: 700;
+    }
+
+    /* ---------- Premium Calendar Card ---------- */
+    .mock-card {
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(47, 93, 82, 0.12);
+      box-shadow: 0 40px 80px -30px rgba(18, 33, 27, 0.22), 0 8px 24px -8px rgba(18, 33, 27, 0.08);
+      transform: rotate(-2deg) perspective(800px) rotateX(2deg);
+      transition: transform 0.45s var(--bounce), box-shadow 0.45s var(--bounce);
+    }
+
+    .mock-card:hover {
+      transform: rotate(0deg) perspective(800px) rotateX(0deg) scale(1.03);
+      box-shadow: 0 60px 100px -30px rgba(18, 33, 27, 0.28), 0 12px 32px -8px rgba(18, 33, 27, 0.10);
+    }
+
+    .cal-header {
+      background: linear-gradient(135deg, var(--pine) 0%, var(--pine-dark) 100%);
+      padding: 20px 22px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cal-month-label {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .cal-nav {
+      background: rgba(255, 255, 255, 0.18);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+      font-family: inherit;
+    }
+
+    .cal-nav:hover {
+      background: rgba(255, 255, 255, 0.32);
+    }
+
+    .cal-body {
+      padding: 18px 18px 16px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-top: 0;
+    }
+
+    .cal-head {
+      text-align: center;
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 0.04em;
+      padding-bottom: 8px;
+    }
+
+    .cal-cell {
+      aspect-ratio: 1;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--canvas);
+      color: var(--ink-soft);
+      transition: transform 0.15s var(--bounce);
+      cursor: default;
+    }
+
+    .cal-cell:not(.cal-empty):not(.cal-dim):hover {
+      transform: scale(1.15);
+    }
+
+    .cal-cell.today {
+      background: linear-gradient(135deg, var(--pine), var(--pine-dark));
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(47, 93, 82, 0.4);
+      border-radius: 12px;
+    }
+
+    .cal-cell.taken {
+      background: #E3ECE6;
+      color: var(--pine-dark);
+    }
+
+    .cal-cell.taken::after {
+      content: '✓';
+      display: block;
+      font-size: 7px;
+      position: absolute;
+      bottom: 3px;
+      color: var(--pine);
+    }
+
+    .cal-cell.taken {
+      position: relative;
+    }
+
+    .cal-cell.skipped {
+      background: #FDEEE9;
+      color: #c05a45;
+    }
+
+    .cal-cell.cal-dim {
+      background: transparent;
+      color: rgba(0, 0, 0, 0.15);
+      cursor: default;
+    }
+
+    .cal-cell.cal-empty {
+      background: transparent;
+    }
+
+    .cal-legend {
+      display: flex;
+      gap: 12px;
+      padding: 0 18px 16px;
+      flex-wrap: wrap;
+    }
+
+    .cal-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-family: 'Space Mono', monospace;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .cal-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 3px;
+    }
+
+    /* ---------- Finale ---------- */
+    .finale {
+      background: linear-gradient(135deg, var(--coral), #C6503B);
+      border-radius: 44px;
+      margin: 0 32px;
+      padding: 90px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .finale h2 {
+      color: #fff;
+      font-size: clamp(28px, 3.8vw, 42px);
+      font-weight: 600;
+    }
+
+    .finale h2 em {
+      color: var(--honey-hi);
+      font-style: italic;
+    }
+
+    .finale p {
+      color: rgba(255, 255, 255, 0.85);
+      margin: 16px auto 28px;
+      max-width: 440px;
+    }
+
+    /* ---------- Premium Download Section ---------- */
+    #download {
+      padding: 0 0 100px;
+    }
+
+    .dl-shell {
+      background: linear-gradient(140deg, #0d1f18 0%, #132e22 55%, #0a1a13 100%);
+      border-radius: 44px;
+      margin: 0 32px;
+      padding: 80px 64px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    /* subtle radial glow behind content */
+    .dl-shell::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: -60px;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, rgba(47, 93, 82, 0.45) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .dl-shell::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      right: -80px;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(242, 112, 90, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .dl-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .dl-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--honey);
+      font-family: 'Space Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 22px;
+    }
+
+    .dl-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulseDot 1.4s ease-in-out infinite;
+      box-shadow: 0 0 6px rgba(74, 222, 128, 0.7);
+    }
+
+    .dl-copy h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .dl-copy h2 em {
+      font-style: italic;
+      color: var(--honey-hi);
+    }
+
+    .dl-copy p {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 15.5px;
+      line-height: 1.65;
+      margin-bottom: 32px;
+      max-width: 400px;
+    }
+
+    .dl-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .dl-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+
+    .dl-badge-icon {
+      font-size: 14px;
+    }
+
+    .dl-store-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .dl-store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      padding: 13px 22px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.22s var(--bounce), box-shadow 0.22s ease;
+    }
+
+    .dl-store-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .dl-store-btn.play {
+      background: #fff;
+      color: #0a1a13;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .dl-store-btn.play:hover {
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .dl-store-btn.ios {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .dl-store-btn.ios:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    .dl-store-btn .btn-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .dl-store-btn .btn-text .sub {
+      display: block;
+      font-size: 10px;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 0.03em;
+      opacity: 0.7;
+      margin-bottom: 1px;
+    }
+
+    .dl-store-btn .btn-text .main {
+      display: block;
+      font-size: 14.5px;
+      font-weight: 700;
+    }
+
+    .dl-note {
+      margin-top: 18px;
+      font-size: 11.5px;
+      font-family: 'Space Mono', monospace;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Right panel — QR card */
+    .dl-qr-panel {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .dl-qr-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 32px 36px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 320px;
+      transition: transform 0.35s var(--bounce);
+    }
+
+    .dl-qr-card:hover {
+      transform: translateY(-6px) scale(1.015);
+    }
+
+    .dl-qr-img-wrap {
+      width: 220px;
+      height: 220px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .dl-qr-img-wrap img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    .dl-qr-label {
+      text-align: center;
+    }
+
+    .dl-qr-label .platform {
+      font-size: 10px;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .dl-qr-label .action {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .dl-qr-label .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+      font-size: 10.5px;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      margin-top: 6px;
+    }
+
+    .dl-stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .dl-stat {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .dl-stat .val {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--honey-hi);
+      line-height: 1;
+    }
+
+    .dl-stat .lbl {
+      font-size: 10px;
+      font-family: 'Space Mono', monospace;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 980px) {
+      .dl-shell {
+        grid-template-columns: 1fr;
+        padding: 56px 36px;
+        gap: 40px;
+        margin: 0 14px;
+      }
+
+      .dl-qr-panel {
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .dl-shell {
+        padding: 40px 22px;
+        border-radius: 28px;
+      }
+
+      .dl-store-row {
+        flex-direction: column;
+      }
+    }
+
+    footer.site {
+      padding: 50px 0 30px;
+      text-align: center;
+    }
+
+    footer .brand {
+      justify-content: center;
+      margin-bottom: 10px;
+      display: flex;
+    }
+
+    footer p {
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .confetti-piece {
+      position: fixed;
+      top: -20px;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dog-stage {
+        height: 360px;
+        margin-top: 10px;
+      }
+
+      .flip-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .spotlight-row {
+        grid-template-columns: 1fr;
+      }
+
+      .carousel-section,
+      .finale {
+        margin: 0 14px;
+      }
+
+      .download-app {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        padding: 0 20px;
+      }
+
+      .nav {
+        margin: 0 10px;
+        padding: 8px 8px 8px 18px;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 66px;
+        left: 12px;
+        right: 12px;
+        background: var(--surface);
+        border-radius: 22px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px;
+        gap: 14px;
+        box-shadow: 0 14px 30px var(--shadow);
+        transform: translateY(-140%);
+        transition: transform 0.25s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0);
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .flip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+
+      .float-chip {
+        display: none;
+      }
+
+      .carousel-stage {
+        height: 300px;
+      }
+
+      .carousel-node {
+        width: 100px;
+        height: 130px;
+        margin: -65px 0 0 -50px;
+      }
+
+      .carousel-node .em {
+        font-size: 34px;
+      }
+
+      .download-app {
+        padding: 28px 20px;
+      }
+
+      .download-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="site">
-  <nav class="nav">
-    <div class="brand">
-      <div class="brand-mark"><svg viewBox="0 0 240 240"><path d="M 62,110 C 62,88 82,76 120,76 C 158,76 178,88 178,110 C 178,128 168,138 152,142 C 146,150 134,154 120,154 C 106,154 94,150 88,142 C 72,138 62,128 62,110 Z" fill="#FBF9F3"/><path d="M 95,108 C 88,104 84,110 86,118 C 88,126 98,130 104,124 C 108,118 104,112 95,108 Z" fill="#2F5D52"/><path d="M 145,108 C 152,104 156,110 154,118 C 152,126 142,130 136,124 C 132,118 136,112 145,108 Z" fill="#2F5D52"/></svg></div>
-      <span class="brand-name">Snootlog</span>
-    </div>
-    <ul class="nav-links" id="navLinks" style="display:flex; align-items:center;">
-      <li><a href="#features" class="link">Features</a></li>
-      <li><a href="#carousel" class="link">Meet the Pets</a></li>
-      <li><a href="#vaccinations" class="link">Vaccinations</a></li>
-      <li><a href="#download" class="btn btn-3d btn-sm">Join waitlist</a></li>
-    </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
-  </nav>
-</header>
-
-<main>
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow-tag"><span class="dot"></span>LAUNCHING AUGUST 2026</span>
-        <h1>Woof. Meow.<br><em>Never miss a dose.</em></h1>
-        <p class="lede">Snootlog keeps every pet's medications, vaccinations, and vet visits in one calm, organized place — go on, spin the pup.</p>
-        <div class="hero-cta">
-          <a href="#download" class="btn btn-3d">Join the waitlist 🐾</a>
-          <a href="#carousel" class="btn btn-ghost">Meet the pets</a>
-        </div>
-        <div class="hero-note">// drag the dog below — try it</div>
+  <header class="site">
+    <nav class="nav">
+      <div class="brand">
+        <img src="./images/snootlog-logo.png" alt="" width="40">
+        <!-- <div class="brand-mark"><svg viewBox="0 0 240 240"><path d="M 62,110 C 62,88 82,76 120,76 C 158,76 178,88 178,110 C 178,128 168,138 152,142 C 146,150 134,154 120,154 C 106,154 94,150 88,142 C 72,138 62,128 62,110 Z" fill="#FBF9F3"/><path d="M 95,108 C 88,104 84,110 86,118 C 88,126 98,130 104,124 C 108,118 104,112 95,108 Z" fill="#2F5D52"/><path d="M 145,108 C 152,104 156,110 154,118 C 152,126 142,130 136,124 C 132,118 136,112 145,108 Z" fill="#2F5D52"/></svg></div> -->
+        <span class="brand-name">Snootlog</span>
       </div>
+      <ul class="nav-links" id="navLinks" style="display:flex; align-items:center;">
+        <li><a href="#features" class="link">Features</a></li>
+        <li><a href="#carousel" class="link">Meet the Pets</a></li>
+        <li><a href="#vaccinations" class="link">Vaccinations</a></li>
+        <li><a href="#download" class="btn btn-3d btn-sm">Join waitlist</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+    </nav>
+  </header>
 
-      <div class="dog-stage" id="dogStage">
-        <div class="float-chip chip-1"><span class="ic">✅</span>Dose logged</div>
-        <div class="float-chip chip-2"><span class="ic">💉</span>Due today</div>
-        <canvas class="dog-canvas" id="dogCanvas"></canvas>
-        <div class="dog-hint">🖱️ drag to spin</div>
-      </div>
-    </div>
-  </section>
-
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <span class="marquee-item">🐶 Dogs <span class="sep">•</span> 🐱 Cats <span class="sep">•</span> 🐰 Rabbits <span class="sep">•</span> 🐹 Hamsters <span class="sep">•</span> 🐦 Birds <span class="sep">•</span> 🐢 Turtles <span class="sep">•</span> 🐴 Horses <span class="sep">•</span> Every Good Boy & Girl <span class="sep">•</span></span>
-      <span class="marquee-item">🐶 Dogs <span class="sep">•</span> 🐱 Cats <span class="sep">•</span> 🐰 Rabbits <span class="sep">•</span> 🐹 Hamsters <span class="sep">•</span> 🐦 Birds <span class="sep">•</span> 🐢 Turtles <span class="sep">•</span> 🐴 Horses <span class="sep">•</span> Every Good Boy & Girl <span class="sep">•</span></span>
-    </div>
-  </div>
-
-  <section id="features">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="tag-chip">/// hover to flip</span>
-        <h2>Everything in one place</h2>
-        <p>Six reasons pet parents are switching to Snootlog.</p>
-      </div>
-      <div class="flip-grid">
-        <div class="flip-card"><div class="flip-inner">
-          <div class="flip-face flip-front"><div class="flip-icon">💊</div><h3>Smart reminders</h3><p>Right on time, every time.</p></div>
-          <div class="flip-face flip-back"><p>Local notifications work even with no internet connection.</p></div>
-        </div></div>
-        <div class="flip-card"><div class="flip-inner">
-          <div class="flip-face flip-front"><div class="flip-icon">✅</div><h3>One-tap logging</h3><p>Taken or skipped in a second.</p></div>
-          <div class="flip-face flip-back"><p>No forms, no friction — just an honest daily record.</p></div>
-        </div></div>
-        <div class="flip-card"><div class="flip-inner">
-          <div class="flip-face flip-front"><div class="flip-icon">📅</div><h3>Full dose history</h3><p>A real calendar, color-coded.</p></div>
-          <div class="flip-face flip-back"><p>See every taken, missed, or skipped dose, going back as far as you need.</p></div>
-        </div></div>
-        <div class="flip-card"><div class="flip-inner">
-          <div class="flip-face flip-front"><div class="flip-icon">💉</div><h3>Vaccination tracking</h3><p>Due-today, always clear.</p></div>
-          <div class="flip-face flip-back"><p>Every shot logged with date given and next due date.</p></div>
-        </div></div>
-        <div class="flip-card"><div class="flip-inner">
-          <div class="flip-face flip-front"><div class="flip-icon">🏥</div><h3>Vets nearby</h3><p>Found in a couple of taps.</p></div>
-          <div class="flip-face flip-back"><p>Uses your location to surface nearby clinics right when needed.</p></div>
-        </div></div>
-        <div class="flip-card"><div class="flip-inner">
-          <div class="flip-face flip-front"><div class="flip-icon">🐾</div><h3>Every pet, one account</h3><p>Whatever your house has.</p></div>
-          <div class="flip-face flip-back"><p>Add every pet with their own photo, medications, and history.</p></div>
-        </div></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="carousel">
-    <div class="wrap">
-      <div class="carousel-section reveal">
-        <div class="section-head">
-          <span class="tag-chip" style="background:rgba(255,255,255,0.1); color:var(--honey);">/// spin me</span>
-          <h2>Meet the pets</h2>
-          <p>Drag the carousel — built for every good boy and girl.</p>
-        </div>
-        <div class="carousel-stage" id="carouselStage">
-          <div class="carousel-ring" id="carouselRing">
-            <div class="carousel-node" style="transform: rotateY(0deg) translateZ(240px);"><span class="em">🐶</span><span class="lb">Dogs</span></div>
-            <div class="carousel-node" style="transform: rotateY(51.4deg) translateZ(240px);"><span class="em">🐱</span><span class="lb">Cats</span></div>
-            <div class="carousel-node" style="transform: rotateY(102.8deg) translateZ(240px);"><span class="em">🐰</span><span class="lb">Rabbits</span></div>
-            <div class="carousel-node" style="transform: rotateY(154.2deg) translateZ(240px);"><span class="em">🐦</span><span class="lb">Birds</span></div>
-            <div class="carousel-node" style="transform: rotateY(205.6deg) translateZ(240px);"><span class="em">🐹</span><span class="lb">Hamsters</span></div>
-            <div class="carousel-node" style="transform: rotateY(257deg) translateZ(240px);"><span class="em">🐢</span><span class="lb">Turtles</span></div>
-            <div class="carousel-node" style="transform: rotateY(308.4deg) translateZ(240px);"><span class="em">🐴</span><span class="lb">Horses</span></div>
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <!-- <span class="eyebrow-tag"><span class="dot"></span>LAUNCHING AUGUST 2026</span> -->
+          <h1>Woof. Meow.<br><em>Never miss a dose.</em></h1>
+          <p class="lede">Snootlog keeps every pet's medications, vaccinations, and vet visits in one calm, organized
+            place — go on, spin the pup.</p>
+          <div class="hero-cta">
+            <a href="#download" class="btn btn-3d">Join the waitlist 🐾</a>
+            <a href="#carousel" class="btn btn-ghost">Meet the pets</a>
           </div>
+          <div class="hero-note">// drag the dog below — try it</div>
         </div>
-        <div class="carousel-hint">click and drag left or right</div>
+
+        <div class="dog-stage" id="dogStage">
+          <div class="float-chip chip-1"><span class="ic">✅</span>Dose logged</div>
+          <div class="float-chip chip-2"><span class="ic">💉</span>Due today</div>
+          <canvas class="dog-canvas" id="dogCanvas"></canvas>
+          <div class="dog-hint">🖱️ drag to spin</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        <span class="marquee-item">🐶 Dogs <span class="sep">•</span> 🐱 Cats <span class="sep">•</span> 🐰 Rabbits
+          <span class="sep">•</span> 🐹 Hamsters <span class="sep">•</span> 🐦 Birds <span class="sep">•</span> 🐢
+          Turtles <span class="sep">•</span> 🐴 Horses <span class="sep">•</span> Every Good Boy & Girl <span
+            class="sep">•</span></span>
+        <span class="marquee-item">🐶 Dogs <span class="sep">•</span> 🐱 Cats <span class="sep">•</span> 🐰 Rabbits
+          <span class="sep">•</span> 🐹 Hamsters <span class="sep">•</span> 🐦 Birds <span class="sep">•</span> 🐢
+          Turtles <span class="sep">•</span> 🐴 Horses <span class="sep">•</span> Every Good Boy & Girl <span
+            class="sep">•</span></span>
       </div>
     </div>
-  </section>
 
-  <section id="vaccinations">
-    <div class="wrap">
-      <div class="spotlight-row">
-        <div class="spotlight-text reveal">
-          <div class="spotlight-eyebrow">Dose History</div>
-          <h3>See the whole month, not just today</h3>
-          <p>Tap any day to see exactly what was taken, missed, or skipped.</p>
-          <ul class="spotlight-list">
-            <li><span class="check">✓</span> Color-coded status for every day</li>
-            <li><span class="check">✓</span> Drill into any date for the full breakdown</li>
-            <li><span class="check">✓</span> Every pet, every medication, one view</li>
-          </ul>
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="tag-chip">/// hover to flip</span>
+          <h2>Everything in one place</h2>
+          <p>Six reasons pet parents are switching to Snootlog.</p>
         </div>
-        <div class="reveal">
-          <div class="mock-card">
-            <div style="font-family:'Fraunces',serif; font-weight:600; font-size:16px;">‹ &nbsp; July 2026 &nbsp; ›</div>
-            <div class="cal-grid">
-              <div class="cal-head">S</div><div class="cal-head">M</div><div class="cal-head">T</div><div class="cal-head">W</div><div class="cal-head">T</div><div class="cal-head">F</div><div class="cal-head">S</div>
-              <div class="cal-cell">29</div><div class="cal-cell">30</div><div class="cal-cell">1</div><div class="cal-cell">2</div><div class="cal-cell">3</div><div class="cal-cell today">4</div><div class="cal-cell">5</div>
-              <div class="cal-cell">6</div><div class="cal-cell">7</div><div class="cal-cell">8</div><div class="cal-cell">9</div><div class="cal-cell">10</div><div class="cal-cell">11</div><div class="cal-cell">12</div>
+        <div class="flip-grid">
+          <div class="flip-card">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon">💊</div>
+                <h3>Smart reminders</h3>
+                <p>Right on time, every time.</p>
+              </div>
+              <div class="flip-face flip-back">
+                <p>Local notifications work even with no internet connection.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flip-card">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon">✅</div>
+                <h3>One-tap logging</h3>
+                <p>Taken or skipped in a second.</p>
+              </div>
+              <div class="flip-face flip-back">
+                <p>No forms, no friction — just an honest daily record.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flip-card">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon">📅</div>
+                <h3>Full dose history</h3>
+                <p>A real calendar, color-coded.</p>
+              </div>
+              <div class="flip-face flip-back">
+                <p>See every taken, missed, or skipped dose, going back as far as you need.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flip-card">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon">💉</div>
+                <h3>Vaccination tracking</h3>
+                <p>Due-today, always clear.</p>
+              </div>
+              <div class="flip-face flip-back">
+                <p>Every shot logged with date given and next due date.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flip-card">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon">🏥</div>
+                <h3>Vets nearby</h3>
+                <p>Found in a couple of taps.</p>
+              </div>
+              <div class="flip-face flip-back">
+                <p>Uses your location to surface nearby clinics right when needed.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flip-card">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon">🐾</div>
+                <h3>Every pet, one account</h3>
+                <p>Whatever your house has.</p>
+              </div>
+              <div class="flip-face flip-back">
+                <p>Add every pet with their own photo, medications, and history.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="download">
-    <div class="wrap">
-      <div class="finale reveal">
-        <h2>Be the first to <em>know.</em> 🐾</h2>
-        <p>Free to use, built for real multi-pet households. We'll email you the moment it's live.</p>
-        <form class="waitlist-form" id="waitlistForm" onsubmit="return false;">
-          <input type="email" placeholder="you@example.com" required aria-label="Email address">
-          <button type="submit" class="btn btn-3d honey">Notify me</button>
-        </form>
+    <section id="carousel">
+      <div class="wrap">
+        <div class="carousel-section reveal">
+          <div class="section-head">
+            <span class="tag-chip" style="background:rgba(255,255,255,0.1); color:var(--honey);">/// spin me</span>
+            <h2>Meet the pets</h2>
+            <p>Drag the carousel — built for every good boy and girl.</p>
+          </div>
+          <div class="carousel-stage" id="carouselStage">
+            <div class="carousel-ring" id="carouselRing">
+              <div class="carousel-node" style="transform: rotateY(0deg) translateZ(240px);"><span
+                  class="em">🐶</span><span class="lb">Dogs</span></div>
+              <div class="carousel-node" style="transform: rotateY(51.4deg) translateZ(240px);"><span
+                  class="em">🐱</span><span class="lb">Cats</span></div>
+              <div class="carousel-node" style="transform: rotateY(102.8deg) translateZ(240px);"><span
+                  class="em">🐰</span><span class="lb">Rabbits</span></div>
+              <div class="carousel-node" style="transform: rotateY(154.2deg) translateZ(240px);"><span
+                  class="em">🐦</span><span class="lb">Birds</span></div>
+              <div class="carousel-node" style="transform: rotateY(205.6deg) translateZ(240px);"><span
+                  class="em">🐹</span><span class="lb">Hamsters</span></div>
+              <div class="carousel-node" style="transform: rotateY(257deg) translateZ(240px);"><span
+                  class="em">🐢</span><span class="lb">Turtles</span></div>
+              <div class="carousel-node" style="transform: rotateY(308.4deg) translateZ(240px);"><span
+                  class="em">🐴</span><span class="lb">Horses</span></div>
+            </div>
+          </div>
+          <div class="carousel-hint">click and drag left or right</div>
+        </div>
       </div>
+    </section>
+
+    <section id="vaccinations">
+      <div class="wrap">
+        <div class="spotlight-row">
+          <div class="spotlight-text reveal">
+            <div class="spotlight-eyebrow">Dose History</div>
+            <h3>See the whole month, not just today</h3>
+            <p>Tap any day to see exactly what was taken, missed, or skipped.</p>
+            <ul class="spotlight-list">
+              <li><span class="check">✓</span> Color-coded status for every day</li>
+              <li><span class="check">✓</span> Drill into any date for the full breakdown</li>
+              <li><span class="check">✓</span> Every pet, every medication, one view</li>
+            </ul>
+          </div>
+          <div class="reveal">
+            <div class="mock-card" id="calCard">
+              <div class="cal-header">
+                <button class="cal-nav" id="calPrev" aria-label="Previous month">‹</button>
+                <span class="cal-month-label" id="currentMonthLabel">October 2026</span>
+                <button class="cal-nav" id="calNext" aria-label="Next month">›</button>
+              </div>
+              <div class="cal-body">
+                <div class="cal-grid" id="calGrid">
+                  <div class="cal-head">S</div>
+                  <div class="cal-head">M</div>
+                  <div class="cal-head">T</div>
+                  <div class="cal-head">W</div>
+                  <div class="cal-head">T</div>
+                  <div class="cal-head">F</div>
+                  <div class="cal-head">S</div>
+                  <!-- Days rendered by JS -->
+                </div>
+              </div>
+              <div class="cal-legend">
+                <div class="cal-legend-item">
+                  <div class="cal-legend-dot" style="background:linear-gradient(135deg,var(--pine),var(--pine-dark))">
+                  </div>Today
+                </div>
+                <div class="cal-legend-item">
+                  <div class="cal-legend-dot" style="background:#E3ECE6"></div>Taken
+                </div>
+                <div class="cal-legend-item">
+                  <div class="cal-legend-dot" style="background:#FDEEE9"></div>Skipped
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="wrap">
+        <div class="dl-shell reveal">
+
+          <!-- Left: copy + store buttons -->
+          <div class="dl-copy">
+            <div class="dl-eyebrow"><span class="dl-live-dot"></span>LIVE ON GOOGLE PLAY</div>
+            <h2>Track every dose<br><em>from your pocket.</em></h2>
+            <p>Stay on top of medications, vaccines, and vet visits with Snootlog — wherever life happens.</p>
+
+            <div class="dl-badges">
+              <div class="dl-badge"><span class="dl-badge-icon">💊</span>Medication reminders</div>
+              <div class="dl-badge"><span class="dl-badge-icon">💉</span>Vaccination tracking</div>
+              <div class="dl-badge"><span class="dl-badge-icon">🏥</span>Vet finder</div>
+              <div class="dl-badge"><span class="dl-badge-icon">🐾</span>Multi-pet support</div>
+            </div>
+
+            <div class="dl-store-row">
+              <a href="https://play.google.com/store/apps/details?id=com.snootlog.myapp" target="_blank"
+                rel="noreferrer" class="dl-store-btn play" aria-label="Download Snootlog from Google Play">
+                <span class="btn-icon">▶</span>
+                <span class="btn-text">
+                  <span class="sub">Get it on</span>
+                  <span class="main">Google Play</span>
+                </span>
+              </a>
+              <a href="#" class="dl-store-btn ios" aria-label="Snootlog iOS — coming soon">
+                <span class="btn-icon">
+                  <svg width="20" height="20" viewBox="0 0 814 1000" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.8 0 663.4 0 541.8c0-207.6 135.4-317.3 268.6-317.3 70.1 0 128.4 45.8 171.8 45.8 41.7 0 107.2-48 185.4-48 29.9 0 108.2 2.6 168.6 71.9zm-174.4-260.4c31.4-37.9 53.9-90.6 53.9-143.3 0-7.4-0.7-14.9-2-21.7-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 137.2 0 8.1 1.3 16.2 1.9 18.8 3.2 0.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 134.8-68.1z" />
+                  </svg>
+                </span>
+                <span class="btn-text">
+                  <span class="sub">Coming soon</span>
+                  <span class="main">App Store</span>
+                </span>
+              </a>
+            </div>
+
+            <p class="dl-note">// Android live · iOS launching soon</p>
+          </div>
+
+          <!-- Right: QR + stats -->
+          <div class="dl-qr-panel">
+            <div class="dl-qr-card">
+              <div class="dl-qr-img-wrap">
+                <img src="./images/snootlog-qr.png" alt="QR code — scan to install Snootlog on Android" />
+              </div>
+              <div class="dl-qr-label">
+                <div class="platform">Android · Google Play</div>
+                <div class="action">Scan to install</div>
+                <div class="status"><span
+                    style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block;"></span>Live
+                  now</div>
+              </div>
+            </div>
+
+            <div class="dl-stats-row">
+              <div class="dl-stat">
+                <div class="val">5★</div>
+                <div class="lbl">App rating</div>
+              </div>
+              <div class="dl-stat">
+                <div class="val">Free</div>
+                <div class="lbl">Always free</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="brand">
+        <img src="./images/snootlog-logo.png" alt="Snootlog logo" width="36" style="border-radius:10px;">
+        <span class="brand-name">Snootlog</span>
+      </div>
+      <p>© <span id="footerYear"></span> Snootlog · Not a substitute for professional veterinary advice.</p>
     </div>
-  </section>
-</main>
+  </footer>
 
-<footer class="site">
-  <div class="wrap">
-    <div class="brand"><div class="brand-mark"><svg viewBox="0 0 240 240"><path d="M 62,110 C 62,88 82,76 120,76 C 158,76 178,88 178,110 C 178,128 168,138 152,142 C 146,150 134,154 120,154 C 106,154 94,150 88,142 C 72,138 62,128 62,110 Z" fill="#FBF9F3"/><path d="M 95,108 C 88,104 84,110 86,118 C 88,126 98,130 104,124 C 108,118 104,112 95,108 Z" fill="#2F5D52"/><path d="M 145,108 C 152,104 156,110 154,118 C 152,126 142,130 136,124 C 132,118 136,112 145,108 Z" fill="#2F5D52"/></svg></div><span class="brand-name">Snootlog</span></div>
-    <p>© 2026 Snootlog · Not a substitute for professional veterinary advice.</p>
-  </div>
-</footer>
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-<script>
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
-  // Nav toggle
-  const navToggle = document.getElementById('navToggle');
-  const navLinks = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
-
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal, .flip-card');
-  if (reduceMotion) {
-    revealEls.forEach(el => el.classList.add('in-view'));
-  } else {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    revealEls.forEach(el => io.observe(el));
-  }
-
-  // Confetti
-  function burstConfetti(x, y, count = 24) {
-    const colors = ['#F2705A', '#D9A441', '#2F5D52', '#FFFFFF'];
-    for (let i = 0; i < count; i++) {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = x + 'px';
-      piece.style.top = y + 'px';
-      const size = 5 + Math.random() * 5;
-      piece.style.width = size + 'px';
-      piece.style.height = size + 'px';
-      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
-      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      document.body.appendChild(piece);
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 80 + Math.random() * 150;
-      const dx = Math.cos(angle) * dist, dy = Math.sin(angle) * dist - 60;
-      piece.animate(
-        [{ transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
-         { transform: `translate(${dx}px, ${dy + 220}px) rotate(${Math.random()*720}deg)`, opacity: 0 }],
-        { duration: 1000 + Math.random() * 500, easing: 'cubic-bezier(.2,.8,.3,1)' }
-      ).onfinish = () => piece.remove();
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal, .flip-card');
+    if (reduceMotion) {
+      revealEls.forEach(el => el.classList.add('in-view'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      revealEls.forEach(el => io.observe(el));
     }
-  }
 
-  const waitlistForm = document.getElementById('waitlistForm');
-  waitlistForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    waitlistForm.classList.add('submitted');
-    waitlistForm.querySelector('input').setAttribute('disabled', 'true');
-    waitlistForm.querySelector('button').setAttribute('disabled', 'true');
-    if (!reduceMotion) {
-      const rect = waitlistForm.getBoundingClientRect();
-      burstConfetti(rect.left + rect.width / 2, rect.top + window.scrollY);
+    // Confetti
+    function burstConfetti(x, y, count = 24) {
+      const colors = ['#F2705A', '#D9A441', '#2F5D52', '#FFFFFF'];
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = x + 'px';
+        piece.style.top = y + 'px';
+        const size = 5 + Math.random() * 5;
+        piece.style.width = size + 'px';
+        piece.style.height = size + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        document.body.appendChild(piece);
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 80 + Math.random() * 150;
+        const dx = Math.cos(angle) * dist, dy = Math.sin(angle) * dist - 60;
+        piece.animate(
+          [{ transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+          { transform: `translate(${dx}px, ${dy + 220}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }],
+          { duration: 1000 + Math.random() * 500, easing: 'cubic-bezier(.2,.8,.3,1)' }
+        ).onfinish = () => piece.remove();
+      }
     }
-  });
 
-  // ---------------- Draggable 3D pet carousel ----------------
-  (function initCarousel() {
-    const stage = document.getElementById('carouselStage');
-    const ring = document.getElementById('carouselRing');
-    if (!stage || !ring) return;
-    let rotationY = 0;
-    let dragging = false;
-    let lastX = 0;
-    let autoSpin = !reduceMotion;
+    // Footer year
+    const footerYear = document.getElementById('footerYear');
+    if (footerYear) footerYear.textContent = new Date().getFullYear();
 
-    function applyRotation() {
-      ring.style.transform = `rotateY(${rotationY}deg)`;
-    }
-    function onDown(x) { dragging = true; autoSpin = false; lastX = x; stage.style.cursor = 'grabbing'; }
-    function onMove(x) {
-      if (!dragging) return;
-      rotationY += (x - lastX) * 0.4;
-      lastX = x;
-      applyRotation();
-    }
-    function onUp() { dragging = false; stage.style.cursor = 'grab'; }
+    // ---------- Dynamic Calendar ----------
+    (function initCalendar() {
+      const labelEl = document.getElementById('currentMonthLabel');
+      const gridEl = document.getElementById('calGrid');
+      const prevBtn = document.getElementById('calPrev');
+      const nextBtn = document.getElementById('calNext');
+      if (!labelEl || !gridEl) return;
 
-    stage.addEventListener('mousedown', (e) => onDown(e.clientX));
-    window.addEventListener('mousemove', (e) => onMove(e.clientX));
-    window.addEventListener('mouseup', onUp);
-    stage.addEventListener('touchstart', (e) => onDown(e.touches[0].clientX), { passive: true });
-    stage.addEventListener('touchmove', (e) => { onMove(e.touches[0].clientX); }, { passive: true });
-    stage.addEventListener('touchend', onUp);
+      const today = new Date();
+      let viewYear = today.getFullYear();
+      let viewMonth = today.getMonth(); // 0-indexed
 
-    function loop() {
-      requestAnimationFrame(loop);
-      if (autoSpin) {
-        rotationY += 0.15;
+      // Seed some demo statuses for past days so the card looks alive
+      const takenDays = new Set([1, 3, 5, 6, 8, 10, 12, 14, 15, 17, 19, 20]);
+      const skippedDays = new Set([4, 9, 13, 18]);
+
+      function renderCalendar() {
+        // Update label
+        labelEl.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' })
+          .format(new Date(viewYear, viewMonth, 1));
+
+        // Remove old day cells (keep 7 header cells)
+        const cells = gridEl.querySelectorAll('.cal-cell');
+        cells.forEach(c => c.remove());
+
+        const firstDay = new Date(viewYear, viewMonth, 1).getDay(); // 0=Sun
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+        const isCurrentMonth = (viewYear === today.getFullYear() && viewMonth === today.getMonth());
+
+        // Leading empty cells
+        for (let i = 0; i < firstDay; i++) {
+          const empty = document.createElement('div');
+          empty.className = 'cal-cell cal-empty';
+          gridEl.appendChild(empty);
+        }
+
+        // Day cells
+        for (let d = 1; d <= daysInMonth; d++) {
+          const cell = document.createElement('div');
+          let cls = 'cal-cell';
+          const isToday = isCurrentMonth && d === today.getDate();
+          const isPast = isCurrentMonth && d < today.getDate();
+
+          if (isToday) {
+            cls += ' today';
+          } else if (isPast) {
+            if (takenDays.has(d)) cls += ' taken';
+            else if (skippedDays.has(d)) cls += ' skipped';
+          }
+          cell.className = cls;
+          cell.textContent = d;
+          gridEl.appendChild(cell);
+        }
+      }
+
+      prevBtn && prevBtn.addEventListener('click', () => {
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        renderCalendar();
+      });
+      nextBtn && nextBtn.addEventListener('click', () => {
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        renderCalendar();
+      });
+
+      renderCalendar();
+    })();
+
+    // ---------------- Draggable 3D pet carousel ----------------
+    (function initCarousel() {
+      const stage = document.getElementById('carouselStage');
+      const ring = document.getElementById('carouselRing');
+      if (!stage || !ring) return;
+      let rotationY = 0;
+      let dragging = false;
+      let lastX = 0;
+      let autoSpin = !reduceMotion;
+
+      function applyRotation() {
+        ring.style.transform = `rotateY(${rotationY}deg)`;
+      }
+      function onDown(x) { dragging = true; autoSpin = false; lastX = x; stage.style.cursor = 'grabbing'; }
+      function onMove(x) {
+        if (!dragging) return;
+        rotationY += (x - lastX) * 0.4;
+        lastX = x;
         applyRotation();
       }
-    }
-    loop();
-  })();
+      function onUp() { dragging = false; stage.style.cursor = 'grab'; }
 
-  // ---------------- 3D low-poly dog (draggable) ----------------
-  (function initDog3D() {
-    if (typeof THREE === 'undefined') return;
-    const canvas = document.getElementById('dogCanvas');
-    const stage = document.getElementById('dogStage');
-    if (!canvas || !stage) return;
+      stage.addEventListener('mousedown', (e) => onDown(e.clientX));
+      window.addEventListener('mousemove', (e) => onMove(e.clientX));
+      window.addEventListener('mouseup', onUp);
+      stage.addEventListener('touchstart', (e) => onDown(e.touches[0].clientX), { passive: true });
+      stage.addEventListener('touchmove', (e) => { onMove(e.touches[0].clientX); }, { passive: true });
+      stage.addEventListener('touchend', onUp);
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 1, 9);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-    const key = new THREE.DirectionalLight(0xffffff, 1);
-    key.position.set(4, 6, 8);
-    scene.add(key);
-    const warm = new THREE.PointLight(0xf2705a, 0.7);
-    warm.position.set(-5, -2, 4);
-    scene.add(warm);
-
-    const honey = new THREE.MeshStandardMaterial({ color: 0xd9a441, flatShading: true, roughness: 0.6 });
-    const honeyDark = new THREE.MeshStandardMaterial({ color: 0xb8892b, flatShading: true, roughness: 0.6 });
-    const cream = new THREE.MeshStandardMaterial({ color: 0xfbf9f3, flatShading: true, roughness: 0.6 });
-    const dark = new THREE.MeshStandardMaterial({ color: 0x2b2620, flatShading: true, roughness: 0.5 });
-
-    const dog = new THREE.Group();
-
-    const body = new THREE.Mesh(new THREE.SphereGeometry(1.5, 8, 6), honey);
-    body.scale.set(1.15, 0.95, 1.5);
-    body.position.set(0, -0.3, 0);
-    dog.add(body);
-
-    const legPositions = [[-0.8, -1.3, 0.9], [0.8, -1.3, 0.9], [-0.8, -1.3, -0.9], [0.8, -1.3, -0.9]];
-    legPositions.forEach((p) => {
-      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.24, 0.9, 8), honeyDark);
-      leg.position.set(p[0], p[1], p[2]);
-      dog.add(leg);
-    });
-
-    const head = new THREE.Mesh(new THREE.SphereGeometry(1.0, 8, 6), honey);
-    head.position.set(0, 0.9, 1.5);
-    dog.add(head);
-
-    const snout = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.5, 0.9, 8), cream);
-    snout.rotation.x = Math.PI / 2;
-    snout.position.set(0, 0.65, 2.5);
-    dog.add(snout);
-
-    const nose = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), dark);
-    nose.position.set(0, 0.68, 2.98);
-    dog.add(nose);
-
-    [[-0.65, 1.55, 1.2], [0.65, 1.55, 1.2]].forEach((p, i) => {
-      const ear = new THREE.Mesh(new THREE.ConeGeometry(0.45, 1.1, 6), honeyDark);
-      ear.position.set(p[0], p[1], p[2]);
-      ear.rotation.z = i === 0 ? 0.5 : -0.5;
-      ear.rotation.x = -0.3;
-      dog.add(ear);
-    });
-
-    [[-0.38, 1.15, 2.15], [0.38, 1.15, 2.15]].forEach((p) => {
-      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), dark);
-      eye.position.set(p[0], p[1], p[2]);
-      dog.add(eye);
-    });
-
-    const tailPivot = new THREE.Group();
-    tailPivot.position.set(0, 0.3, -1.6);
-    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.24, 1.1, 8), honeyDark);
-    tail.position.set(0, 0.4, -0.3);
-    tail.rotation.x = -0.6;
-    tailPivot.add(tail);
-    dog.add(tailPivot);
-
-    dog.scale.set(0.62, 0.62, 0.62);
-    scene.add(dog);
-
-    let userRotY = 0.4;
-    let dragging = false;
-    let lastX = 0, lastY = 0;
-    let velocity = 0;
-    let autoSpin = !reduceMotion;
-
-    function pointerDown(x, y) { dragging = true; autoSpin = false; lastX = x; lastY = y; velocity = 0; }
-    function pointerMove(x, y) {
-      if (!dragging) return;
-      const dx = x - lastX;
-      velocity = dx * 0.01;
-      userRotY += dx * 0.01;
-      lastX = x; lastY = y;
-    }
-    function pointerUp() { dragging = false; }
-
-    canvas.addEventListener('mousedown', (e) => pointerDown(e.clientX, e.clientY));
-    window.addEventListener('mousemove', (e) => pointerMove(e.clientX, e.clientY));
-    window.addEventListener('mouseup', pointerUp);
-    canvas.addEventListener('touchstart', (e) => pointerDown(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-    canvas.addEventListener('touchmove', (e) => pointerMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-    canvas.addEventListener('touchend', pointerUp);
-
-    function resize() {
-      const rect = stage.getBoundingClientRect();
-      renderer.setSize(rect.width, rect.height);
-      camera.aspect = rect.width / rect.height;
-      camera.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    let t = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      t += 0.016;
-      if (autoSpin) userRotY += 0.006;
-      if (!dragging && Math.abs(velocity) > 0.0001) {
-        userRotY += velocity;
-        velocity *= 0.94;
+      function loop() {
+        requestAnimationFrame(loop);
+        if (autoSpin) {
+          rotationY += 0.15;
+          applyRotation();
+        }
       }
-      dog.rotation.y = userRotY;
-      dog.position.y = Math.sin(t * 1.3) * 0.18;
-      tailPivot.rotation.y = Math.sin(t * 6) * 0.5;
-      renderer.render(scene, camera);
-    }
-    animate();
-  })();
-</script>
+      loop();
+    })();
+
+    // ---------------- 3D low-poly dog (draggable) ----------------
+    (function initDog3D() {
+      if (typeof THREE === 'undefined') return;
+      const canvas = document.getElementById('dogCanvas');
+      const stage = document.getElementById('dogStage');
+      if (!canvas || !stage) return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+      camera.position.set(0, 1, 9);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+      const key = new THREE.DirectionalLight(0xffffff, 1);
+      key.position.set(4, 6, 8);
+      scene.add(key);
+      const warm = new THREE.PointLight(0xf2705a, 0.7);
+      warm.position.set(-5, -2, 4);
+      scene.add(warm);
+
+      const honey = new THREE.MeshStandardMaterial({ color: 0xd9a441, flatShading: true, roughness: 0.6 });
+      const honeyDark = new THREE.MeshStandardMaterial({ color: 0xb8892b, flatShading: true, roughness: 0.6 });
+      const cream = new THREE.MeshStandardMaterial({ color: 0xfbf9f3, flatShading: true, roughness: 0.6 });
+      const dark = new THREE.MeshStandardMaterial({ color: 0x2b2620, flatShading: true, roughness: 0.5 });
+
+      const dog = new THREE.Group();
+
+      const body = new THREE.Mesh(new THREE.SphereGeometry(1.5, 8, 6), honey);
+      body.scale.set(1.15, 0.95, 1.5);
+      body.position.set(0, -0.3, 0);
+      dog.add(body);
+
+      const legPositions = [[-0.8, -1.3, 0.9], [0.8, -1.3, 0.9], [-0.8, -1.3, -0.9], [0.8, -1.3, -0.9]];
+      legPositions.forEach((p) => {
+        const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.24, 0.9, 8), honeyDark);
+        leg.position.set(p[0], p[1], p[2]);
+        dog.add(leg);
+      });
+
+      const head = new THREE.Mesh(new THREE.SphereGeometry(1.0, 8, 6), honey);
+      head.position.set(0, 0.9, 1.5);
+      dog.add(head);
+
+      const snout = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.5, 0.9, 8), cream);
+      snout.rotation.x = Math.PI / 2;
+      snout.position.set(0, 0.65, 2.5);
+      dog.add(snout);
+
+      const nose = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), dark);
+      nose.position.set(0, 0.68, 2.98);
+      dog.add(nose);
+
+      [[-0.65, 1.55, 1.2], [0.65, 1.55, 1.2]].forEach((p, i) => {
+        const ear = new THREE.Mesh(new THREE.ConeGeometry(0.45, 1.1, 6), honeyDark);
+        ear.position.set(p[0], p[1], p[2]);
+        ear.rotation.z = i === 0 ? 0.5 : -0.5;
+        ear.rotation.x = -0.3;
+        dog.add(ear);
+      });
+
+      [[-0.38, 1.15, 2.15], [0.38, 1.15, 2.15]].forEach((p) => {
+        const eye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), dark);
+        eye.position.set(p[0], p[1], p[2]);
+        dog.add(eye);
+      });
+
+      const tailPivot = new THREE.Group();
+      tailPivot.position.set(0, 0.3, -1.6);
+      const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.24, 1.1, 8), honeyDark);
+      tail.position.set(0, 0.4, -0.3);
+      tail.rotation.x = -0.6;
+      tailPivot.add(tail);
+      dog.add(tailPivot);
+
+      dog.scale.set(0.62, 0.62, 0.62);
+      scene.add(dog);
+
+      let userRotY = 0.4;
+      let dragging = false;
+      let lastX = 0, lastY = 0;
+      let velocity = 0;
+      let autoSpin = !reduceMotion;
+
+      function pointerDown(x, y) { dragging = true; autoSpin = false; lastX = x; lastY = y; velocity = 0; }
+      function pointerMove(x, y) {
+        if (!dragging) return;
+        const dx = x - lastX;
+        velocity = dx * 0.01;
+        userRotY += dx * 0.01;
+        lastX = x; lastY = y;
+      }
+      function pointerUp() { dragging = false; }
+
+      canvas.addEventListener('mousedown', (e) => pointerDown(e.clientX, e.clientY));
+      window.addEventListener('mousemove', (e) => pointerMove(e.clientX, e.clientY));
+      window.addEventListener('mouseup', pointerUp);
+      canvas.addEventListener('touchstart', (e) => pointerDown(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+      canvas.addEventListener('touchmove', (e) => pointerMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+      canvas.addEventListener('touchend', pointerUp);
+
+      function resize() {
+        const rect = stage.getBoundingClientRect();
+        renderer.setSize(rect.width, rect.height);
+        camera.aspect = rect.width / rect.height;
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      let t = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        t += 0.016;
+        if (autoSpin) userRotY += 0.006;
+        if (!dragging && Math.abs(velocity) > 0.0001) {
+          userRotY += velocity;
+          velocity *= 0.94;
+        }
+        dog.rotation.y = userRotY;
+        dog.position.y = Math.sin(t * 1.3) * 0.18;
+        tailPivot.rotation.y = Math.sin(t * 6) * 0.5;
+        renderer.render(scene, camera);
+      }
+      animate();
+    })();
+  </script>
 
 </body>
+
 </html>
