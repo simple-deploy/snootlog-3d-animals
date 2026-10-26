@@ -1211,6 +1211,373 @@
       }
     }
 
+    /* ---------- How It Works / Timeline ---------- */
+    .timeline-card {
+      background: var(--midnight);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sky-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .sky-dawn {
+      background: linear-gradient(135deg, #3b2b3f, #7a4450 45%, #d98a5e 100%);
+      animation: dawnPhase 16s linear infinite;
+    }
+
+    .sky-day {
+      background: linear-gradient(135deg, #163646, #2c7a8c 50%, #74c2d6 100%);
+      animation: dayPhase 16s linear infinite;
+    }
+
+    .sky-dusk {
+      background: linear-gradient(135deg, #3a1f3d, #86405a 45%, #dd7f4a 100%);
+      animation: duskPhase 16s linear infinite;
+    }
+
+    .sky-night {
+      background: linear-gradient(160deg, #0c1512, #12211b 50%, #1b3128 100%);
+      animation: nightPhase 16s linear infinite;
+    }
+
+    @keyframes dawnPhase {
+
+      0%,
+      10% {
+        opacity: 1;
+      }
+
+      26% {
+        opacity: 0;
+      }
+
+      88% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes dayPhase {
+
+      0%,
+      16% {
+        opacity: 0;
+      }
+
+      30%,
+      48% {
+        opacity: 1;
+      }
+
+      62% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes duskPhase {
+
+      0%,
+      48% {
+        opacity: 0;
+      }
+
+      62%,
+      76% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes nightPhase {
+      0% {
+        opacity: 0;
+      }
+
+      76% {
+        opacity: 0;
+      }
+
+      88%,
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .timeline-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(circle at 20% 20%, rgba(217, 164, 65, 0.12), transparent 55%),
+        radial-gradient(circle at 85% 80%, rgba(242, 112, 90, 0.1), transparent 50%);
+    }
+
+    .timeline-head,
+    .timeline-track-wrap {
+      position: relative;
+      z-index: 2;
+    }
+
+    .timeline-head h3 {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .timeline-head p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin-top: 8px;
+      max-width: 380px;
+    }
+
+    .timeline-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 44px;
+    }
+
+    .timeline-track-wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      margin: 0 10px;
+    }
+
+    .timeline-sweep {
+      position: absolute;
+      top: -6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 6px rgba(242, 112, 90, 0.2);
+      animation: sweepAnim 16s linear infinite;
+    }
+
+    @keyframes sweepAnim {
+      0% {
+        left: 0%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    .timeline-orb {
+      position: absolute;
+      top: -30px;
+      width: 28px;
+      height: 28px;
+      animation: sweepAnim 16s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+    }
+
+    .orb-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      z-index: 0;
+      animation: orbColorAnim 16s linear infinite;
+    }
+
+    .orb-emoji {
+      position: relative;
+      z-index: 1;
+      font-size: 19px;
+      line-height: 1;
+      animation: orbBobAnim 1.8s ease-in-out infinite;
+    }
+
+    @keyframes orbBobAnim {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+
+    @keyframes orbColorAnim {
+
+      0%,
+      10% {
+        box-shadow: 0 0 16px 6px rgba(242, 200, 106, 0.45);
+      }
+
+      30%,
+      48% {
+        box-shadow: 0 0 20px 7px rgba(255, 233, 168, 0.5);
+      }
+
+      62%,
+      76% {
+        box-shadow: 0 0 16px 6px rgba(242, 164, 94, 0.45);
+      }
+
+      88%,
+      100% {
+        box-shadow: 0 0 12px 4px rgba(215, 222, 235, 0.3);
+      }
+    }
+
+    .timeline-hours {
+      display: flex;
+      justify-content: space-between;
+      margin: 14px 10px 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .timeline-marker {
+      position: absolute;
+      top: -10px;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .timeline-marker .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 3px solid var(--midnight);
+    }
+
+    .timeline-marker .dot.taken {
+      background: var(--pine);
+    }
+
+    .timeline-marker .dot.pending {
+      background: var(--honey);
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+
+    .timeline-marker .label {
+      margin-top: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      white-space: nowrap;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Orb animal picker */
+    .orb-picker {
+      position: relative;
+    }
+
+    .orb-picker-current {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), background 0.2s ease;
+    }
+
+    .orb-picker-current:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: scale(1.06);
+    }
+
+    .orb-picker-list {
+      position: absolute;
+      top: 62px;
+      right: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      width: 168px;
+      background: rgba(20, 30, 26, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 10px;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .orb-picker.open .orb-picker-list {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .orb-picker-list button {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 17px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .orb-picker-list button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.12);
+    }
+
+    @media (max-width: 640px) {
+      .timeline-card {
+        padding: 32px 22px;
+      }
+
+      .orb-picker-list {
+        right: auto;
+        left: 0;
+      }
+    }
+
     footer.site {
       padding: 50px 0 30px;
       text-align: center;
@@ -1357,6 +1724,7 @@
       </div>
       <ul class="nav-links" id="navLinks" style="display:flex; align-items:center;">
         <li><a href="#features" class="link">Features</a></li>
+        <li><a href="#how-it-works" class="link">How it works</a></li>
         <li><a href="#carousel" class="link">Meet the Pets</a></li>
         <li><a href="#vaccinations" class="link">Vaccinations</a></li>
         <li><a href="#download" class="btn btn-3d btn-sm">Join waitlist</a></li>
@@ -1561,6 +1929,73 @@
                   <div class="cal-legend-dot" style="background:#FDEEE9"></div>Skipped
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="tag-chip">/// a day in the app</span>
+          <h2>See how it works</h2>
+          <p>Every reminder lands right on time — here’s what a real day looks like from wake-up to bedtime.</p>
+        </div>
+        <div class="timeline-card reveal">
+          <div class="sky-layer sky-dawn"></div>
+          <div class="sky-layer sky-day"></div>
+          <div class="sky-layer sky-dusk"></div>
+          <div class="sky-layer sky-night"></div>
+          <div class="timeline-head">
+            <div>
+              <span class="tag-chip" style="background:rgba(255,255,255,0.1); color:var(--honey);">/// live demo</span>
+              <h3 id="timelineTitle">Buddy’s day, at a glance</h3>
+              <p>Swipe through your pet’s full medication schedule — taken, pending, and upcoming.</p>
+            </div>
+            <div class="orb-picker" id="orbPicker">
+              <button class="orb-picker-current" id="orbCurrent" aria-label="Change the animal riding the timeline"
+                aria-haspopup="true">
+                <span id="orbCurrentEmoji">🐶</span>
+              </button>
+              <div class="orb-picker-list" id="orbList">
+                <button data-emoji="🐶" data-name="Buddy">🐶</button>
+                <button data-emoji="🐱" data-name="Willow">🐱</button>
+                <button data-emoji="🐰" data-name="Clover">🐰</button>
+                <button data-emoji="🐹" data-name="Peanut">🐹</button>
+                <button data-emoji="🐦" data-name="Kiwi">🐦</button>
+                <button data-emoji="🐠" data-name="Bubbles">🐠</button>
+                <button data-emoji="🐢" data-name="Shelby">🐢</button>
+                <button data-emoji="🐴" data-name="Domino">🐴</button>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-track-wrap">
+            <div class="timeline-track">
+              <div class="timeline-orb" id="timelineOrb">
+                <span class="orb-glow"></span>
+                <span class="orb-emoji" id="orbEmoji">🐶</span>
+              </div>
+              <div class="timeline-sweep"></div>
+              <div class="timeline-marker" style="left:8%;">
+                <div class="dot taken"></div>
+                <div class="label">8AM · Apoquel</div>
+              </div>
+              <div class="timeline-marker" style="left:38%;">
+                <div class="dot taken"></div>
+                <div class="label">1PM · Walk</div>
+              </div>
+              <div class="timeline-marker" style="left:70%;">
+                <div class="dot pending"></div>
+                <div class="label">7PM · Apoquel</div>
+              </div>
+              <div class="timeline-marker" style="left:92%;">
+                <div class="dot pending"></div>
+                <div class="label">10PM · Fish oil</div>
+              </div>
+            </div>
+            <div class="timeline-hours">
+              <span>6AM</span><span>10AM</span><span>2PM</span><span>6PM</span><span>10PM</span>
             </div>
           </div>
         </div>
@@ -1936,6 +2371,34 @@
         renderer.render(scene, camera);
       }
       animate();
+    })();
+    // ---------- How It Works Orb Picker ----------
+    (function initOrbPicker() {
+      const orbPicker = document.getElementById('orbPicker');
+      const orbCurrentBtn = document.getElementById('orbCurrent');
+      const orbCurrentEmoji = document.getElementById('orbCurrentEmoji');
+      const orbEmojiEl = document.getElementById('orbEmoji');
+      const timelineTitle = document.getElementById('timelineTitle');
+      if (!orbPicker) return;
+
+      orbCurrentBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        orbPicker.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!orbPicker.contains(e.target)) orbPicker.classList.remove('open');
+      });
+      document.querySelectorAll('#orbList button').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const emoji = btn.getAttribute('data-emoji');
+          const name = btn.getAttribute('data-name');
+          orbCurrentEmoji.textContent = emoji;
+          orbEmojiEl.textContent = emoji;
+          timelineTitle.textContent = `${name}'s day, at a glance`;
+          orbPicker.classList.remove('open');
+        });
+      });
     })();
   </script>
 
